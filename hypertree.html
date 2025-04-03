@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hyperbolic Tree - Programas Académicos Colombia</title>
+  <link rel="icon" type="image/x-icon" href="img/favicon_hyp.ico">
+    <!-- CSS de Hypertree (tema claro) -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/d3-hypertree@1.1.0/dist/d3-hypertree-light.min.css"
+    />
+    <!-- JS de Hypertree -->
+    <script src="https://cdn.jsdelivr.net/npm/d3-hypertree@1.1.0/dist/d3-hypertree.min.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+    }
+    svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+    <script>
+        const iconMap = {
+            'Pregrado': '🎓',
+            'Especialización': '📘',
+            'Maestría': '📗',
+            'Doctorado': '📙',
+            'Presencial': '🏫',
+            'Virtual': '💻',
+            'Oficial': '🏛️',
+            'Privado': '🏢',
+            'Ingeniería': '🛠️',
+            'Salud': '⚕️',
+            'Ciencias Sociales': '📚',
+            'Ciencias Económicas': '💰',
+            'Educación': '📖',
+            'otros': '❓'
+        }
+
+        const ht = new hyt.Hypertree(
+                {
+                    parent: document.body             
+                },
+                {
+                    dataloader: hyt.loaders.fromFile('data/programas.d3.json'),
+                    langInitBFS: (ht, n) => {
+                        const label = n.data.name
+                        n.precalc.label = label
+                        n.precalc.icon = iconMap[label] || ''
+                    },
+                    filter: {
+                        maxlabels: 20
+                    },
+                    geometry: {
+                        captionFont: '14px Roboto',
+                        captionHeight: 0.09
+                    }
+                }
+            )
+            ht.initPromise
+                .then(()=> new Promise((ok, err)=> ht.animateUp(ok, err)))            
+                .then(()=> ht.drawDetailFrame())
+    </script>
+</body>
+</html>

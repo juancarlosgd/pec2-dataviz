@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solucion a la PEC2 - Visualización de Datos</title>
+    <link rel="icon" type="image/x-icon" href="img/favicon_index.png" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body,
+      html {
+        font-family: "Lato", sans-serif;
+        height: 100%;
+        scroll-behavior: smooth;
+      }
+
+      .hero {
+        position: relative;
+        height: 100vh;
+        color: #282854;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 2rem;
+        overflow: hidden;
+        height: 500px;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("img/background-1.jpg");
+        background-size: cover;
+        background-position: center;
+        opacity: 0.4;
+        z-index: 0;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(204, 207, 216, 0.4);
+        z-index: 1;
+      }
+
+      .hero h1,
+      .hero p,
+      .cards {
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero p {
+        font-size: 1.8rem;
+        max-width: 600px;
+        margin-bottom: 0.5rem;
+      }
+
+      .cards {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 60px;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.9);
+        color: #333;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        width: 300px;
+        min-height: 200px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-link {
+        text-decoration: none;
+      }
+
+      .icon-wrapper {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #4f46e5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto 1rem;
+      }
+
+      .icon-wrapper svg {
+        color: white;
+      }
+
+      footer {
+        background: #111;
+        color: #ccc;
+        text-align: center;
+        padding: 1rem;
+      }
+
+      footer a {
+        color: #4f46e5;
+        text-decoration: none;
+      }
+
+      .linkedin-icon {
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+      }
+
+      .back-top-wrapper {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 1000;
+        /* margin-top: 15px; */
+        /* display: flex; */
+        justify-content: center;
+      }
+
+      .back-top {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: "Lato", sans-serif;
+        font-size: 0.95rem;
+        color: #777;
+        /* tono tenue por defecto */
+        text-decoration: none;
+        border: 1px solid #ccc;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        background-color: #f9f9f9;
+        transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+      }
+
+      .back-top:hover {
+        background-color: #4f46e5;
+        border-color: #4f46e5;
+        color: #fff;
+      }
+
+      .back-icon {
+        width: 16px;
+        height: 16px;
+        stroke-width: 2.5;
+      }
+
+      .chart-section.horizontal {
+        padding-top: 4rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        padding-bottom: 2rem;
+        background-color: #f9f9f9;
+      }
+
+      .chart-section.reverse {
+        background-color: #ffffff;
+      }
+
+      .chart-container {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        max-width: 1200px;
+        margin: 0 auto;
+        gap: 2rem;
+        justify-content: center;
+      }
+
+      .chart-section.reverse .chart-container {
+        flex-direction: row-reverse;
+      }
+
+      .chart-left {
+        flex: 1 1 30%;
+        text-align: center;
+      }
+
+      .chart-right {
+        flex: 1 1 65%;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        text-align: justify;
+      }
+
+      .chart-image-left {
+        width: 100%;
+        max-width: 350px;
+        height: auto;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 0.5rem;
+      }
+
+      .source-caption {
+        font-size: 0.9rem;
+        color: #555;
+        margin-bottom: 1.5rem;
+      }
+
+      .source-caption a {
+        color: #4f46e5;
+        text-decoration: none;
+      }
+
+      .chart-right h2 {
+        font-size: 2rem;
+        margin-bottom: 1.2 rem;
+        color: #282854;
+      }
+
+      .chart-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        font-size: 1rem;
+        color: #333;
+        text-align: justify;
+        line-height: 1.5;
+      }
+
+      .chart-info ul {
+        margin-top: 0.5rem;
+        padding-left: 1.5rem;
+      }
+
+      .chart-info li {
+        margin-bottom: 0.4rem;
+      }
+
+      .accordion-toggle {
+        color: #0077cc;
+        cursor: pointer;
+        font-weight: bold;
+        margin-left: 8px;
+        transition: color 0.3s;
+      }
+
+      .accordion-toggle:hover {
+        color: #4f46e5;
+        text-decoration: underline;
+      }
+
+      .accordion-content {
+        background-color: #f9f9f9;
+        border-left: 4px solid #0077cc;
+        padding: 10px 15px;
+        margin-top: 8px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+      }
+
+      .accordion-content ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .accordion-content ul li {
+        margin-bottom: 6px;
+      }
+
+      .line-tableau {
+        padding-top: 15px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .tableauPlaceholder {
+        max-width: 800px;
+        height: auto;
+        border: 1px solid #4f46e5;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .div-hyp {
+        display: flex;
+        max-height: 800px;
+        width: auto;
+        margin-top: 20px;
+        justify-content: center;
+
+      }
+      .iframe-hyp{
+        display:flex;
+        /* width: 800px; */
+        width: 100%;
+        border: none;
+        height: 600px;
+        align-items: flex-start;
+        justify-content: center;
+        /* border: 1px solid #4f46e5; */
+      }
+    </style>
+  </head>
+
+  <body id="top">
+    <section class="hero">
+      <h1>Visualización de Datos</h1>
+      <p>Solución a la práctica: PEC-2</p>
+      <div class="cards">
+        <a href="#line-chart" class="card-link">
+          <div class="card">
+            <div class="icon-wrapper"><i data-lucide="line-chart"></i></div>
+            <p>Line Chart</p>
+          </div>
+        </a>
+        <a href="#symbol-map" class="card-link">
+          <div class="card">
+            <div class="icon-wrapper"><i data-lucide="globe"></i></div>
+            <p>Proportional Symbol Map</p>
+          </div>
+        </a>
+        <a href="#hyperbolic-tree" class="card-link">
+          <div class="card">
+            <div class="icon-wrapper"><i data-lucide="git-branch"></i></div>
+            <p>Hyperbolic Trees</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section id="line-chart" class="chart-section horizontal">
+      <div class="chart-container">
+        <div class="chart-left">
+          <img
+            src="img/Line-Graph.png"
+            alt="Line Chart"
+            class="chart-image-left"
+          />
+          <p class="source-caption">
+            Tomado de:
+            <a
+              href="https://datavizcatalogue.com/methods/line_chart.html"
+              target="_blank"
+              >Data Viz Catalogue</a
+            >
+          </p>
+        </div>
+        <div class="chart-right">
+          <h2>Line Chart</h2>
+          <div class="chart-info">
+            <div>
+              El gráfico de líneas tiene sus raíces en el siglo XVIII, cuando
+              comenzó a usarse para representar visualmente datos numéricos a lo
+              largo del tiempo. Fue el escocés
+              <strong>William Playfair</strong> quien popularizó esta técnica en
+              1786, al incluirla en su obra
+              <em
+                ><a
+                  href="https://ine.es/expo_graficos2010/expogra_autor2.htm"
+                  target="_blank"
+                  >The Commercial and Political Atlas</a
+                ></em
+              >, considerada una de las primeras publicaciones en utilizar
+              gráficos estadísticos para mostrar información económica. En esta
+              obra, Playfair representó series temporales como las exportaciones
+              e importaciones del Reino Unido mediante líneas conectadas,
+              permitiendo observar tendencias y comparaciones de forma
+              intuitiva.
+            </div>
+            <h4>Funcionamiento</h4>
+            <div>
+              Consiste en representar puntos de datos cuantitativos conectados
+              por líneas, generalmente a lo largo de un eje temporal. Cada línea
+              representa una serie o categoría. El gráfico permite seguir la
+              evolución de los valores y detectar tendencias, patrones,
+              estacionalidades o cambios significativos a lo largo del tiempo.
+            </div>
+            <!-- Ventajas -->
+            <h4>Ventajas</h4>
+            <div>
+              Claridad para mostrar tendencias, fácil de interpretar, útil para
+              comparar series en el tiempo.
+              <span
+                class="accordion-toggle"
+                onclick="toggleAccordion('accordion-ventajas', this)"
+                >Ver más...</span
+              >
+            </div>
+            <div
+              id="accordion-ventajas"
+              class="accordion-content"
+              style="display: none; margin-top: 0.5em"
+            >
+              <ul>
+                <li>
+                  Ideal para representar series temporales o datos con
+                  continuidad.
+                </li>
+                <li>
+                  Permite visualizar varias líneas para comparar categorías o
+                  regiones.
+                </li>
+                <li>
+                  Facilita detectar picos, caídas, patrones estacionales y
+                  rupturas.
+                </li>
+                <li>
+                  Compatible con datos extensos si se usa una herramienta
+                  adecuada (Plotly, Tableau, etc.).
+                </li>
+                <li>
+                  Se puede enriquecer con interactividad: tooltips, zoom,
+                  filtros.
+                </li>
+                <li>
+                  Útil para storytelling de datos en informes, dashboards o
+                  visualizaciones web.
+                </li>
+              </ul>
+            </div>
+
+            <!-- Desventajas -->
+            <h4>Desventajas y limitaciones</h4>
+            <div>
+              Poco útil para datos no ordenados, puede saturarse con muchas
+              series, depende del diseño de los ejes.
+              <span
+                class="accordion-toggle"
+                onclick="toggleAccordion('accordion-desventajas', this)"
+                >Ver más...</span
+              >
+            </div>
+            <div
+              id="accordion-desventajas"
+              class="accordion-content"
+              style="display: none; margin-top: 0.5em"
+            >
+              <ul>
+                <li>
+                  No apto para datos sin orden lógico (como categorías
+                  nominales).
+                </li>
+                <li>Con muchas series puede volverse confuso visualmente.</li>
+                <li>
+                  Depende mucho del buen diseño de los ejes para evitar
+                  distorsiones.
+                </li>
+                <li>
+                  No siempre muestra valores exactos claramente (se requieren
+                  tooltips o etiquetas).
+                </li>
+                <li>
+                  Unión entre puntos puede ser engañosa si los datos tienen
+                  vacíos o no son secuenciales.
+                </li>
+                <li>
+                  Requiere herramientas adecuadas si se usan datasets muy
+                  grandes o con alta frecuencia.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <strong>Tipos de datos:</strong> Cuantitativos continuos u ordenados
+            (especialmente series temporales)
+          </div>
+          <div>
+            <strong>Ejemplos:</strong> Evolución del PIB por país, Temperatura
+            media anual por ciudad, Índices bursátiles o precios históricos,
+            Casos de enfermedades por mes, Tráfico web por día entre otros.
+          </div>
+          <div>
+            <strong>Aplicaciones:</strong> Economía, salud, medio ambiente,
+            analítica web, demografía entre otros.
+          </div>
+          <div>
+            <strong>Fuentes:</strong>
+            <ul>
+              <li>
+                <a href="https://datavizcatalogue.com" target="_blank"
+                  >datavizcatalogue.com</a
+                >
+              </li>
+              <li>
+                <a href="https://ourworldindata.org" target="_blank"
+                  >ourworldindata.org</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://www.jaspersoft.com/es/articles/what-is-a-line-chart"
+                  target="_blank"
+                  >jaspersoft.com</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://ine.es/expo_graficos2010/expogra_autor2.htm"
+                  target="_blank"
+                  >Playfair, W. (1786). *The Commercial and Political Atlas*</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="line-tableau">
+        <div
+          class="tableauPlaceholder"
+          id="viz1743697689684"
+          style="position: relative"
+        >
+          <noscript
+            ><a href="#"
+              ><img
+                alt="Dashboard 1 "
+                src="https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Li&#47;LineChart_17434909916700&#47;Dashboard1&#47;1_rss.png"
+                style="border: none" /></a></noscript
+          ><object class="tableauViz" style="display: none">
+            <param
+              name="host_url"
+              value="https%3A%2F%2Fpublic.tableau.com%2F"
+            />
+            <param name="embed_code_version" value="3" />
+            <param name="site_root" value="" />
+            <param
+              name="name"
+              value="LineChart_17434909916700&#47;Dashboard1"
+            />
+            <param name="tabs" value="no" />
+            <param name="toolbar" value="yes" />
+            <param
+              name="static_image"
+              value="https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Li&#47;LineChart_17434909916700&#47;Dashboard1&#47;1.png"
+            />
+            <param name="animate_transition" value="yes" />
+            <param name="display_static_image" value="yes" />
+            <param name="display_spinner" value="yes" />
+            <param name="display_overlay" value="yes" />
+            <param name="display_count" value="yes" />
+            <param name="language" value="es-ES" />
+            <param name="filter" value="publish=yes" />
+          </object>
+        </div>
+        <script type="text/javascript">
+          var divElement = document.getElementById("viz1743697689684");
+          var vizElement = divElement.getElementsByTagName("object")[0];
+          if (divElement.offsetWidth > 800) {
+            vizElement.style.width = "100%";
+            vizElement.style.height = divElement.offsetWidth * 0.75 + "px";
+          } else if (divElement.offsetWidth > 500) {
+            vizElement.style.width = "100%";
+            vizElement.style.height = divElement.offsetWidth * 0.75 + "px";
+          } else {
+            vizElement.style.width = "100%";
+            vizElement.style.height = "727px";
+          }
+          var scriptElement = document.createElement("script");
+          scriptElement.src =
+            "https://public.tableau.com/javascripts/api/viz_v1.js";
+          vizElement.parentNode.insertBefore(scriptElement, vizElement);
+        </script>
+      </div>
+    </section>
+
+    <!-- Proportional Symbol Map -->
+    <section id="symbol-map" class="chart-section horizontal reverse">
+      <div class="chart-container">
+        <div class="chart-left">
+          <img
+            src="img/mapa_de_puntos.png"
+            alt="Proportional Symbol Map"
+            class="chart-image-left"
+          />
+          <p class="source-caption">
+            Tomado de:
+            <a
+              href="https://datavizcatalogue.com/methods/proportional_symbol_map.html"
+              target="_blank"
+              >Data Viz Catalogue</a
+            >
+          </p>
+        </div>
+        <!-- <div class="chart-right">
+          <h2>Proportional Symbol Map</h2>
+          <div class="chart-info">
+            <div><strong>Origen:</strong> Cartografía temática</div>
+            <div>
+              <strong>Autoría:</strong> Desarrollado a lo largo del siglo XX
+            </div>
+            <div>
+              <strong>Ventajas:</strong> Representación clara de magnitudes
+              geoespaciales
+            </div>
+            <div>
+              <strong>Inconvenientes:</strong> Superposición de símbolos en
+              zonas densas
+            </div>
+            <div>
+              <strong>Tipos de datos:</strong> Cuantitativos, georreferenciados
+            </div>
+            <div>
+              <strong>Ejemplos:</strong> Población por ciudad, volumen de
+              exportaciones
+            </div>
+            <div>
+              <strong>Aplicaciones:</strong> Geografía, economía, planificación
+              urbana
+            </div>
+            <div>
+              <strong>Fuentes:</strong>
+              <ul>
+                <li>
+                  <a href="https://datavizcatalogue.com" target="_blank"
+                    >datavizcatalogue.com</a
+                  >
+                </li>
+                <li>
+                  Robinson, A. H. et al. (1995). *Elements of Cartography*
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div> -->
+        <div class="chart-right">
+          <h2>Proportional Symbol Map</h2>
+          <div class="chart-info">
+            <div>
+              El <strong>mapa de símbolos proporcionales</strong> es una técnica
+              de visualización geográfica que tiene sus raíces en el siglo XIX.
+              Se utiliza para representar cantidades asociadas a ubicaciones
+              geográficas mediante símbolos cuyo tamaño es proporcional al valor
+              representado. Uno de los primeros usos documentados fue realizado
+              por el ingeniero y cartógrafo británico
+              <strong>Henry Drury Harness</strong> en 1838, quien utilizó
+              círculos proporcionales en un mapa para representar el volumen de
+              tráfico en la red ferroviaria de Irlanda.
+            </div>
+            <h4>Funcionamiento</h4>
+            <div>
+              Cada punto geográfico se representa con un símbolo (comúnmente un
+              círculo, pero también puede ser un cuadrado, una torta o un
+              pictograma), cuyo tamaño varía en proporción directa al valor de
+              la variable representada. Cuando hay más de una categoría en el
+              mismo punto, es común usar
+              <strong>gráficos de torta proporcionales</strong> como símbolo,
+              permitiendo comparar subcategorías dentro de cada ubicación.
+            </div>
+            <h4>Ventajas</h4>
+            <div>
+              Visibilidad clara de diferencias de magnitud entre regiones,
+              posibilidad de representar múltiples variables por símbolo.
+              <span
+                class="accordion-toggle"
+                onclick="toggleAccordion('accordion-ventajas-map', this)"
+                >Ver más...</span
+              >
+            </div>
+            <div
+              id="accordion-ventajas-map"
+              class="accordion-content"
+              style="display: none; margin-top: 0.5em"
+            >
+              <ul>
+                <li>Intuitivo para comparar valores geográficamente.</li>
+                <li>
+                  Permite representar proporciones internas con gráficos de
+                  torta.
+                </li>
+                <li>
+                  Se puede animar en series temporales para mostrar evolución en
+                  el tiempo.
+                </li>
+                <li>Funciona bien con datos agregados por región o punto.</li>
+                <li>
+                  Versátil: puede usarse con pictogramas, íconos o tortas.
+                </li>
+                <li>
+                  Puede integrarse con herramientas interactivas (Tableau,
+                  Leaflet, Flourish, D3, etc.).
+                </li>
+              </ul>
+            </div>
+
+            <h4>Desventajas y limitaciones</h4>
+            <div>
+              Puede generar confusión si los símbolos se sobreponen o si el
+              tamaño no se percibe correctamente.
+              <span
+                class="accordion-toggle"
+                onclick="toggleAccordion('accordion-desventajas-map', this)"
+                >Ver más...</span
+              >
+            </div>
+            <div
+              id="accordion-desventajas-map"
+              class="accordion-content"
+              style="display: none; margin-top: 0.5em"
+            >
+              <ul>
+                <li>
+                  La percepción humana no es lineal para comparar áreas
+                  (círculos grandes pueden parecer desproporcionados).
+                </li>
+                <li>
+                  Puede saturarse en mapas con muchos puntos cercanos
+                  (sobreposición).
+                </li>
+                <li>Difícil representar valores negativos.</li>
+                <li>
+                  Menos preciso para comparar entre símbolos de tamaños
+                  similares.
+                </li>
+                <li>
+                  Requiere normalización si hay grandes disparidades en los
+                  datos.
+                </li>
+                <li>
+                  Dependiente de escalado y diseño adecuado para evitar
+                  distorsión visual.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <strong>Tipos de datos:</strong> Cuantitativos agregados por
+            ubicación (totales, tasas, proporciones). Ideal para representar
+            variables como población, desempleo, producción, etc.
+          </div>
+          <div>
+            <strong>Ejemplos:</strong> Número de casos de enfermedades por
+            ciudad, Tasa de desempleo por departamento, Producción agrícola por
+            región, Accidentes de tránsito por municipio.
+          </div>
+          <div>
+            <strong>Aplicaciones:</strong> Geografía, economía, demografía,
+            salud pública, estudios urbanos, medio ambiente.
+          </div>
+          <div>
+            <strong>Fuentes:</strong>
+            <ul>
+              <li>
+                <a href="https://datavizcatalogue.com" target="_blank"
+                  >Data Viz Catalogue</a
+                >
+              </li>
+              <li>
+                <a href="https://www.data-to-viz.com/" target="_blank"
+                  >Data to Viz</a
+                >
+              </li>
+              <li>
+                <a href="https://datavizproject.com/" target="_blank"
+                  >Data Viz Project</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://en.wikipedia.org/wiki/Proportional_symbol_map"
+                  target="_blank"
+                  >Wikipedia: Proportional Symbol Map</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://www.ncesc.com/geographic-faq/what-is-proportional-symbol-in-geography/"
+                  target="_blank"
+                  >NCESC: What is Proportional Symbol in Geography?</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="line-tableau">
+        <div
+          class="tableauPlaceholder"
+          id="viz1743609091733"
+          style="position: relative"
+        >
+          <noscript
+            ><a href="#"
+              ><img
+                alt="Dashboard 1 "
+                src="https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;R5&#47;R5DPF3ZR3&#47;1_rss.png"
+                style="border: none" /></a></noscript
+          ><object class="tableauViz" style="display: none">
+            <param
+              name="host_url"
+              value="https%3A%2F%2Fpublic.tableau.com%2F"
+            />
+            <param name="embed_code_version" value="3" />
+            <param name="path" value="shared&#47;R5DPF3ZR3" />
+            <param name="toolbar" value="yes" />
+            <param
+              name="static_image"
+              value="https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;R5&#47;R5DPF3ZR3&#47;1.png"
+            />
+            <param name="animate_transition" value="yes" />
+            <param name="display_static_image" value="yes" />
+            <param name="display_spinner" value="yes" />
+            <param name="display_overlay" value="yes" />
+            <param name="display_count" value="yes" />
+            <param name="language" value="es-ES" />
+            <param name="filter" value="publish=yes" />
+          </object>
+        </div>
+        <script type="text/javascript">
+          var divElement = document.getElementById("viz1743609091733");
+          var vizElement = divElement.getElementsByTagName("object")[0];
+          if (divElement.offsetWidth > 800) {
+            vizElement.style.width = "100%";
+            vizElement.style.height = divElement.offsetWidth * 0.75 + "px";
+          } else if (divElement.offsetWidth > 500) {
+            vizElement.style.width = "100%";
+            vizElement.style.height = divElement.offsetWidth * 0.75 + "px";
+          } else {
+            vizElement.style.width = "100%";
+            vizElement.style.height = "727px";
+          }
+          var scriptElement = document.createElement("script");
+          scriptElement.src =
+            "https://public.tableau.com/javascripts/api/viz_v1.js";
+          vizElement.parentNode.insertBefore(scriptElement, vizElement);
+        </script>
+      </div>
+    </section>
+
+    <!-- Hyperbolic Trees -->
+    <section id="hyperbolic-tree" class="chart-section horizontal">
+      <div class="chart-container">
+        <div class="chart-left">
+          <img
+            src="img/hyperbolic-tree.png"
+            alt="Hyperbolic Tree"
+            class="chart-image-left"
+          />
+          <p class="source-caption">
+            Tomado de:
+            <a
+              href="https://datavizproject.com/data-type/hyperbolic-tree/"
+              target="_blank"
+              >Data Viz Proyect</a
+            >
+          </p>
+        </div>
+        <div class="chart-right">
+          <h2>Hyperbolic Tree</h2>
+          <div class="chart-info">
+            <div>
+              El gráfico de árbol hiperbólico (Hyperbolic Tree) fue introducido
+              por
+              <strong>Robert Lamping, Ramana Rao y Peter Pirolli</strong> en
+              1995 en Xerox PARC como una forma de visualizar estructuras
+              jerárquicas de gran tamaño en un espacio limitado. Utiliza la
+              geometría hiperbólica para representar nodos y relaciones, de
+              manera que el nodo focal se mantiene al centro mientras el resto
+              se distribuye radialmente, permitiendo un enfoque tipo
+              “<em>fisheye</em>” que da contexto global sin perder el detalle
+              local.
+            </div>
+            <h4>Funcionamiento</h4>
+            <div>
+              El árbol hiperbólico proyecta jerarquías sobre una geometría no
+              euclidiana (curva), normalmente el
+              <em
+                ><a
+                  href="https://es.wikipedia.org/wiki/Disco_de_Poincar%C3%A9"
+                  target="_blank"
+                  >modelo de Poincaré</a
+                ></em
+              >. Los nodos cercanos al centro son más importantes o están en
+              foco, y se pueden desplazar dinámicamente. Gracias a la compresión
+              espacial, es posible mostrar muchas ramas simultáneamente,
+              manteniendo legibilidad y contexto. Los nodos pueden tener íconos,
+              etiquetas y elementos interactivos que revelan más información al
+              usuario.
+            </div>
+
+            <!-- Ventajas -->
+            <h4>Ventajas</h4>
+            <div>
+              Ideal para representar estructuras complejas jerárquicas de forma
+              compacta e interactiva.
+              <span
+                class="accordion-toggle"
+                onclick="toggleAccordion('accordion-ventajas-tree', this)"
+              >
+                Ver más...
+              </span>
+            </div>
+            <div
+              id="accordion-ventajas-tree"
+              class="accordion-content"
+              style="display: none; margin-top: 0.5em"
+            >
+              <ul>
+                <li>
+                  Permite visualizar grandes jerarquías en un solo marco sin
+                  desplazamiento vertical.
+                </li>
+                <li>
+                  La navegación centrada en el foco permite explorar sin perder
+                  el contexto completo.
+                </li>
+                <li>
+                  Ideal para visualización web por su carácter interactivo y
+                  radial.
+                </li>
+                <li>
+                  Soporta enriquecimiento con íconos, imágenes, tooltips y
+                  enlaces.
+                </li>
+                <li>
+                  Ofrece un enfoque estético que combina información y diseño.
+                </li>
+                <li>
+                  Adaptable a múltiples niveles jerárquicos sin perder
+                  legibilidad.
+                </li>
+              </ul>
+            </div>
+
+            <!-- Desventajas -->
+            <h4>Desventajas y limitaciones</h4>
+            <div>
+              No es adecuado para todos los tipos de datos ni para usuarios no
+              familiarizados con el formato radial.
+              <span
+                class="accordion-toggle"
+                onclick="toggleAccordion('accordion-desventajas-tree', this)"
+              >
+                Ver más...
+              </span>
+            </div>
+            <div
+              id="accordion-desventajas-tree"
+              class="accordion-content"
+              style="display: none; margin-top: 0.5em"
+            >
+              <ul>
+                <li>
+                  Puede ser complejo de interpretar para usuarios sin
+                  experiencia en visualización de datos.
+                </li>
+                <li>
+                  No se adapta bien a estructuras planas o datos no jerárquicos.
+                </li>
+                <li>
+                  Requiere librerías específicas como
+                  <code>d3-hypertree</code> o <code>hyperbolictree.js</code>.
+                </li>
+                <li>
+                  El uso intensivo de geometría hiperbólica puede dificultar
+                  exportaciones estáticas.
+                </li>
+                <li>
+                  La animación y la interactividad pueden generar problemas de
+                  rendimiento con árboles masivos.
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <strong>Tipos de datos:</strong> Jerárquicos, categóricos,
+              estructurales (arbóles genealógicos, taxonomías, programas
+              académicos, etc.).
+            </div>
+            <div>
+              <strong>Ejemplos:</strong> Catálogos biológicos (como el árbol de
+              los primates), estructuras organizacionales, clasificaciones
+              académicas, taxonomías de conocimiento, árboles genealógicos.
+            </div>
+            <div>
+              <strong>Aplicaciones:</strong> Visualización de taxonomías,
+              navegación de contenidos estructurados, clasificación científica,
+              sistemas educativos, exploradores de directorios o archivos,
+              conocimiento empresarial.
+            </div>
+            <div>
+              <strong>Fuentes:</strong>
+              <ul>
+                <li>
+                  <a href="https://datavizproject.com" target="_blank"
+                    >datavizproject.com</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://www.cs.kent.edu/~jmaletic/cs63903/papers/Lamping96.pdf"
+                    target="_blank"
+                    >Lamping, R., Rao, R., & Pirolli, P. (1995). A focus+context
+                    technique based on hyperbolic geometry for visualizing large
+                    hierarchies.</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/glouwa/d3-hypertree"
+                    target="_blank"
+                    >d3-hypertree repositorio oficial</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://en.wikipedia.org/wiki/Hyperbolic_tree"
+                    target="_blank"
+                    >Wikipedia: Hyperbolic Tree</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="div-hyp">
+        <iframe
+          class="iframe-hyp"
+          src="./hypertree.html"
+          allowfullscreen
+        >
+        </iframe>
+      </div>
+    </section>
+    <div class="back-top-wrapper">
+      <a href="#top" class="back-top">
+        <i data-lucide="chevron-up" class="back-icon"></i>
+        Volver al inicio
+      </a>
+    </div>
+    <footer>
+      <p>
+        Juan Carlos Gómez Delgado&middot;
+        <a
+          href="https://www.linkedin.com/in/juan-carlos-gomez-delgado/"
+          target="_blank"
+          ><i data-lucide="linkedin" class="linkedin-icon"></i
+        ></a>
+        &middot; 2025
+      </p>
+    </footer>
+    <script>
+      function toggleAccordion(id, toggleElement) {
+        const content = document.getElementById(id);
+        const isVisible = content.style.display === "block";
+        content.style.display = isVisible ? "none" : "block";
+        toggleElement.textContent = isVisible ? "Ver más..." : "Ver menos...";
+      }
+    </script>
+    <script>
+      lucide.createIcons();
+    </script>
+    <script>
+      const ht = new hyt.Hypertree(
+        { parent: document.getElementById("tree-container") },
+        { dataloader: hyt.loaders.generators.nT1 }
+      );
+      ht.initPromise
+        .then(() => new Promise((ok, err) => ht.animateUp(ok, err)))
+        .then(() => ht.drawDetailFrame());
+    </script>
+  </body>
+</html>
